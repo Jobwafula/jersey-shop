@@ -121,7 +121,7 @@ const Hero = () => {
 
       {/* WhatsApp Floating Button (for mobile) */}
       <a
-        href="https://wa.me/1234567890?text=Hi%20I'm%20interested%20in%20your%20jerseys"
+        href="https://wa.me/123567890?text=Hi%20I'm%20interested%20in%20your%20jerseys"
         target="_blank"
         rel="noopener noreferrer"
         className="lg:hidden fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-2xl hover:bg-green-700 transition-colors z-50 animate-bounce-slow border-2 border-green-400/30"
