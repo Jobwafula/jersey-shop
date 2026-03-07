@@ -5,28 +5,49 @@ import {
   Search, 
   Menu, 
   X, 
-  User, 
-  ChevronDown, 
   Heart,
-  LogOut,
-  Settings,
+  Shirt,
+  Footprints,
+  Sparkles,
+  Baby,
   Package,
-  HelpCircle
+  Trophy,
+  Trash2,
+  Plus,
+  Minus
 } from 'lucide-react';
 
+// Mock cart data
+const mockCartItems = [
+  {
+    id: '1',
+    name: 'Manchester United Home Jersey 2024/25',
+    price: 89.99,
+    size: 'M',
+    quantity: 1,
+    image: 'https://images.unsplash.com/photo-1580086316916-1a4fc1c5be6f?w=100',
+    team: 'Manchester United'
+  },
+  {
+    id: '2',
+    name: 'Liverpool Away Jersey 2024/25',
+    price: 84.99,
+    size: 'L',
+    quantity: 2,
+    image: 'https://images.unsplash.com/photo-1580086316916-1a4fc1c5be6f?w=100',
+    team: 'Liverpool'
+  }
+];
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [cartItems, setCartItems] = useState(mockCartItems);
   
   const location = useLocation();
-
-  // Mock authentication state - replace with real auth later
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,69 +58,50 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    // Close mobile menu when route changes
     setIsMobileMenuOpen(false);
     setIsSearchOpen(false);
-    setIsUserMenuOpen(false);
+    setIsCartOpen(false);
   }, [location]);
 
   useEffect(() => {
-    if (isMobileMenuOpen) {
+    if (isMobileMenuOpen || isCartOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, isCartOpen]);
 
-  const categories = [
-    { 
-      name: 'All Jerseys', 
-      href: '/products',
-      description: 'Browse our complete collection'
-    },
-    { 
-      name: 'Home Jerseys', 
-      href: '/category/home',
-      description: 'Classic home kits'
-    },
-    { 
-      name: 'Away Jerseys', 
-      href: '/category/away',
-      description: 'Stylish away designs'
-    },
-    { 
-      name: 'Third Jerseys', 
-      href: '/category/third',
-      description: 'Unique third kits'
-    },
-    { 
-      name: 'Retro Classics', 
-      href: '/category/retro',
-      description: 'Vintage and throwback'
-    },
-    { 
-      name: 'Training Gear', 
-      href: '/category/training',
-      description: 'Practice and casual wear'
-    },
-  ];
+  // Cart calculations
+  const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  const leagues = [
-    { name: 'Premier League', href: '/league/premier-league', teams: 20 },
-    { name: 'La Liga', href: '/league/la-liga', teams: 20 },
-    { name: 'Serie A', href: '/league/serie-a', teams: 20 },
-    { name: 'Bundesliga', href: '/league/bundesliga', teams: 18 },
-    { name: 'Ligue 1', href: '/league/ligue-1', teams: 18 },
-    { name: 'Champions League', href: '/league/champions-league', teams: 32 },
-  ];
+  // Cart handlers
+  const updateQuantity = (id: string, newQuantity: number) => {
+    if (newQuantity < 1) return;
+    setCartItems(prev => 
+      prev.map(item => 
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
 
-  const popularTeams = [
-    { name: 'Manchester United', href: '/team/manchester-united' },
-    { name: 'Liverpool', href: '/team/liverpool' },
-    { name: 'Real Madrid', href: '/team/real-madrid' },
-    { name: 'Barcelona', href: '/team/barcelona' },
-    { name: 'Bayern Munich', href: '/team/bayern-munich' },
-    { name: 'AC Milan', href: '/team/ac-milan' },
+  const removeItem = (id: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
+  // Menu items - exactly as specified
+  const menuItems = [
+    { name: 'Home', href: '/', icon: null },
+    { name: 'Retro Kits', href: '/category/retro', icon: <Trophy className="w-4 h-4 mr-2" /> },
+    { name: 'New Season Kits', href: '/category/new-season', icon: <Sparkles className="w-4 h-4 mr-2" /> },
+    { name: 'Football Boots', href: '/boots', icon: <Footprints className="w-4 h-4 mr-2" /> },
+    { name: 'Special Kits', href: '/special', icon: <Package className="w-4 h-4 mr-2" /> },
+    { name: 'Kids Kits', href: '/kids', icon: <Baby className="w-4 h-4 mr-2" /> },
+    { name: 'Others', href: '/others', icon: <Shirt className="w-4 h-4 mr-2" /> },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -112,10 +114,8 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled 
-            ? 'bg-white shadow-lg py-2' 
-            : 'bg-gradient-to-b from-black/50 to-transparent py-4'
+        className={`fixed top-0 w-full z-50 transition-all duration-300 bg-white ${
+          isScrolled ? 'py-2 shadow-xl' : 'py-4 shadow-lg'
         }`}
       >
         <div className="container-custom">
@@ -123,11 +123,7 @@ const Navbar = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-lg transition-colors ${
-                isScrolled 
-                  ? 'hover:bg-gray-100 text-gray-700' 
-                  : 'hover:bg-white/10 text-white'
-              }`}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
@@ -139,174 +135,35 @@ const Navbar = () => {
 
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-xl">JS</span>
               </div>
               <span className="text-2xl font-bold">
-                <span className="text-primary-600">Jersey</span>
-                <span className={isScrolled ? 'text-gray-900' : 'text-white'}>
-                  Shop
-                </span>
+                <span className="text-red-600">Jersey</span>
+                <span className="text-gray-900">Shop</span>
               </span>
             </Link>
 
             {/* Desktop Navigation - Center */}
             <div className="hidden lg:flex items-center space-x-1">
-              {/* Categories Mega Menu */}
-              <div
-                className="relative"
-                onMouseEnter={() => setActiveDropdown('categories')}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <button
-                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg font-medium hover:text-primary-600 transition-colors ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
-                  } ${activeDropdown === 'categories' ? 'bg-white/10' : ''}`}
+              {menuItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="flex items-center px-4 py-2 rounded-lg font-medium hover:text-red-600 transition-colors text-gray-700"
                 >
-                  <span>Categories</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
-                    activeDropdown === 'categories' ? 'rotate-180' : ''
-                  }`} />
-                </button>
-                
-                {activeDropdown === 'categories' && (
-                  <div className="absolute top-full left-0 mt-2 w-[600px] bg-white rounded-xl shadow-2xl p-6 grid grid-cols-2 gap-6 animate-slideDown">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-3 pb-2 border-b border-gray-200">
-                        Shop by Category
-                      </h3>
-                      <ul className="space-y-2">
-                        {categories.map((category) => (
-                          <li key={category.href}>
-                            <Link
-                              to={category.href}
-                              className="block p-2 rounded-lg hover:bg-primary-50 transition-colors"
-                            >
-                              <p className="font-medium text-gray-900">{category.name}</p>
-                              <p className="text-sm text-gray-500">{category.description}</p>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-3 pb-2 border-b border-gray-200">
-                        Popular Teams
-                      </h3>
-                      <ul className="space-y-2">
-                        {popularTeams.map((team) => (
-                          <li key={team.href}>
-                            <Link
-                              to={team.href}
-                              className="block p-2 rounded-lg hover:bg-primary-50 transition-colors"
-                            >
-                              <p className="font-medium text-gray-900">{team.name}</p>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                      
-                      <h3 className="font-semibold text-gray-900 mt-6 mb-3 pb-2 border-b border-gray-200">
-                        Featured
-                      </h3>
-                      <Link
-                        to="/new-arrivals"
-                        className="block p-3 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
-                      >
-                        <p className="font-medium text-primary-700">New Arrivals</p>
-                        <p className="text-sm text-primary-600">Check out the latest kits</p>
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Leagues Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setActiveDropdown('leagues')}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <button
-                  className={`flex items-center space-x-1 px-4 py-2 rounded-lg font-medium hover:text-primary-600 transition-colors ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
-                  } ${activeDropdown === 'leagues' ? 'bg-white/10' : ''}`}
-                >
-                  <span>Leagues</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
-                    activeDropdown === 'leagues' ? 'rotate-180' : ''
-                  }`} />
-                </button>
-                
-                {activeDropdown === 'leagues' && (
-                  <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl p-4 animate-slideDown">
-                    <ul className="space-y-1">
-                      {leagues.map((league) => (
-                        <li key={league.href}>
-                          <Link
-                            to={league.href}
-                            className="flex items-center justify-between p-3 rounded-lg hover:bg-primary-50 transition-colors"
-                          >
-                            <span className="font-medium text-gray-900">{league.name}</span>
-                            <span className="text-xs text-gray-500">{league.teams} teams</span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              {/* Direct Links */}
-              <Link
-                to="/products"
-                className={`px-4 py-2 rounded-lg font-medium hover:text-primary-600 transition-colors ${
-                  isScrolled ? 'text-gray-700' : 'text-white'
-                }`}
-              >
-                All Jerseys
-              </Link>
-
-              <Link
-                to="/sale"
-                className={`px-4 py-2 rounded-lg font-medium text-primary-600 hover:text-primary-700 transition-colors ${
-                  isScrolled ? '' : 'bg-white/10'
-                }`}
-              >
-                Sale
-              </Link>
+                  {item.icon}
+                  <span>{item.name}</span>
+                </Link>
+              ))}
             </div>
 
             {/* Right Icons */}
-            <div className="flex items-center space-x-1">
-              {/* Search Button/Bar */}
-              <div className="hidden md:block relative">
-                <form onSubmit={handleSearch}>
-                  <input
-                    type="text"
-                    placeholder="Search jerseys..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className={`w-64 pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all ${
-                      isScrolled 
-                        ? 'border-gray-300 bg-white' 
-                        : 'border-white/30 bg-white/10 text-white placeholder-white/70'
-                    }`}
-                  />
-                  <Search className={`absolute left-3 top-2.5 w-5 h-5 ${
-                    isScrolled ? 'text-gray-400' : 'text-white/70'
-                  }`} />
-                </form>
-              </div>
-
-              {/* Mobile Search Toggle */}
+            <div className="flex items-center space-x-2">
+              {/* Search */}
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className={`md:hidden p-2 rounded-lg transition-colors ${
-                  isScrolled 
-                    ? 'hover:bg-gray-100 text-gray-700' 
-                    : 'hover:bg-white/10 text-white'
-                }`}
+                className="p-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors"
                 aria-label="Search"
               >
                 <Search className="w-5 h-5" />
@@ -315,136 +172,174 @@ const Navbar = () => {
               {/* Wishlist */}
               <Link
                 to="/wishlist"
-                className={`relative p-2 rounded-lg transition-colors hidden sm:block ${
-                  isScrolled 
-                    ? 'hover:bg-gray-100 text-gray-700' 
-                    : 'hover:bg-white/10 text-white'
-                }`}
+                className="relative p-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors hidden sm:block"
                 aria-label="Wishlist"
               >
                 <Heart className="w-5 h-5" />
               </Link>
 
-              {/* User Menu */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isScrolled 
-                      ? 'hover:bg-gray-100 text-gray-700' 
-                      : 'hover:bg-white/10 text-white'
-                  }`}
-                  aria-label="User menu"
-                >
-                  <User className="w-5 h-5" />
-                </button>
-
-                {isUserMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-2xl py-2 animate-slideDown">
-                    {isLoggedIn ? (
-                      <>
-                        <div className="px-4 py-3 border-b border-gray-100">
-                          <p className="font-medium text-gray-900">John Doe</p>
-                          <p className="text-sm text-gray-500">john@example.com</p>
-                        </div>
-                        <Link
-                          to="/account"
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          <User className="w-4 h-4 mr-3" />
-                          My Profile
-                        </Link>
-                        <Link
-                          to="/orders"
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          <Package className="w-4 h-4 mr-3" />
-                          Orders
-                        </Link>
-                        <Link
-                          to="/settings"
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          <Settings className="w-4 h-4 mr-3" />
-                          Settings
-                        </Link>
-                        <div className="border-t border-gray-100 my-2"></div>
-                        <button
-                          onClick={() => {
-                            setIsLoggedIn(false);
-                            setIsUserMenuOpen(false);
-                          }}
-                          className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600"
-                        >
-                          <LogOut className="w-4 h-4 mr-3" />
-                          Sign Out
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          to="/login"
-                          className="block px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          Sign In
-                        </Link>
-                        <Link
-                          to="/register"
-                          className="block px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          Create Account
-                        </Link>
-                        <div className="border-t border-gray-100 my-2"></div>
-                        <Link
-                          to="/help"
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          <HelpCircle className="w-4 h-4 mr-3" />
-                          Help Center
-                        </Link>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-
               {/* Cart */}
-              <Link
-                to="/cart"
-                className="relative p-2 rounded-lg transition-colors"
+              <button
+                onClick={() => setIsCartOpen(!isCartOpen)}
+                className="relative p-2 rounded-lg hover:bg-gray-100 text-gray-700 transition-colors group"
                 aria-label="Cart"
               >
-               
-              </Link>
+                <ShoppingCart className="w-5 h-5 group-hover:text-red-600 transition-colors" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-fadeIn">
+                    {cartItemCount > 9 ? '9+' : cartItemCount}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
 
-          {/* Mobile Search Bar */}
+          {/* Search Bar */}
           {isSearchOpen && (
-            <div className="md:hidden mt-4 animate-slideDown">
+            <div className="mt-4 animate-slideDown">
               <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
-                  placeholder="Search jerseys..."
+                  placeholder="Search for jerseys, boots, accessories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-3 pl-12 pr-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 pl-12 pr-4 rounded-lg border-2 border-red-200 focus:border-red-600 focus:ring-2 focus:ring-red-200 outline-none transition-all"
                   autoFocus
                 />
-                <Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-4 top-3.5 w-5 h-5 text-red-400" />
               </form>
             </div>
           )}
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Cart Sidebar */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 bg-black bg-opacity-50"
+            onClick={() => setIsCartOpen(false)}
+          />
+          <div className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl animate-slideLeft">
+            <div className="flex flex-col h-full">
+              {/* Cart Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center">
+                  <ShoppingCart className="w-6 h-6 text-red-600 mr-2" />
+                  <h2 className="text-xl font-bold text-gray-900">Your Cart</h2>
+                  <span className="ml-2 bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-bold">
+                    {cartItemCount} {cartItemCount === 1 ? 'item' : 'items'}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsCartOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Cart Items */}
+              <div className="flex-1 overflow-y-auto p-6">
+                {cartItems.length === 0 ? (
+                  <div className="text-center py-12">
+                    <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 mb-4">Your cart is empty</p>
+                    <button
+                      onClick={() => setIsCartOpen(false)}
+                      className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                    >
+                      Continue Shopping
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {cartItems.map((item) => (
+                      <div key={item.id} className="flex items-center space-x-4 py-4 border-b border-gray-100">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-20 h-20 object-cover rounded-lg"
+                        />
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900">{item.name}</h3>
+                          <p className="text-sm text-gray-500">{item.team}</p>
+                          <p className="text-sm text-gray-500">Size: {item.size}</p>
+                          <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                className="p-1 hover:bg-gray-100 rounded"
+                              >
+                                <Minus className="w-4 h-4" />
+                              </button>
+                              <span className="w-8 text-center font-medium">{item.quantity}</span>
+                              <button
+                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                className="p-1 hover:bg-gray-100 rounded"
+                              >
+                                <Plus className="w-4 h-4" />
+                              </button>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="font-bold text-red-600">
+                                ${(item.price * item.quantity).toFixed(2)}
+                              </span>
+                              <button
+                                onClick={() => removeItem(item.id)}
+                                className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-red-600"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Cart Footer */}
+              {cartItems.length > 0 && (
+                <div className="border-t border-gray-200 p-6">
+                  <div className="space-y-3 mb-4">
+                    <div className="flex justify-between text-gray-600">
+                      <span>Subtotal</span>
+                      <span>${cartTotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Shipping</span>
+                      <span>Free</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-lg">
+                      <span>Total</span>
+                      <span className="text-red-600">${cartTotal.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Link
+                      to="/checkout"
+                      className="block w-full bg-red-600 text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                      onClick={() => setIsCartOpen(false)}
+                    >
+                      Checkout
+                    </Link>
+                    <button
+                      onClick={clearCart}
+                      className="block w-full text-red-600 text-center px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors"
+                    >
+                      Clear Cart
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
@@ -456,11 +351,11 @@ const Navbar = () => {
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-xl">JS</span>
                   </div>
                   <span className="text-xl font-bold">
-                    <span className="text-primary-600">Jersey</span>
+                    <span className="text-red-600">Jersey</span>
                     <span className="text-gray-900">Shop</span>
                   </span>
                 </div>
@@ -472,131 +367,46 @@ const Navbar = () => {
                 </button>
               </div>
 
-              {/* Mobile Menu Content */}
-              <div className="space-y-6">
-                {/* Categories Section */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">Categories</h3>
-                  <div className="space-y-2">
-                    {categories.map((category) => (
-                      <Link
-                        key={category.href}
-                        to={category.href}
-                        className="block p-3 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <p className="font-medium text-gray-900">{category.name}</p>
-                        <p className="text-sm text-gray-500">{category.description}</p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+              {/* Mobile Menu Items */}
+              <div className="space-y-2">
+                {menuItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="flex items-center py-3 px-2 text-gray-900 font-medium hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.icon && <span className="mr-3 text-red-600">{item.icon}</span>}
+                    {item.name}
+                  </Link>
+                ))}
 
-                {/* Leagues Section */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">Leagues</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {leagues.map((league) => (
-                      <Link
-                        key={league.href}
-                        to={league.href}
-                        className="p-2 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors text-center"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <p className="font-medium text-gray-900 text-sm">{league.name}</p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+                {/* Mobile Wishlist */}
+                <Link
+                  to="/wishlist"
+                  className="flex items-center py-3 px-2 text-gray-900 font-medium hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Heart className="w-5 h-5 mr-3 text-red-600" />
+                  Wishlist
+                </Link>
 
-                {/* Popular Teams */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">Popular Teams</h3>
-                  <div className="space-y-2">
-                    {popularTeams.map((team) => (
-                      <Link
-                        key={team.href}
-                        to={team.href}
-                        className="block p-2 hover:bg-primary-50 rounded-lg transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {team.name}
-                      </Link>
-                    ))}
+                {/* Mobile Cart Summary */}
+                <Link
+                  to="/cart"
+                  className="flex items-center justify-between py-3 px-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors mt-4"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <div className="flex items-center">
+                    <ShoppingCart className="w-5 h-5 mr-2 text-red-600" />
+                    <span className="font-medium text-gray-900">Cart</span>
                   </div>
-                </div>
-
-                {/* Quick Links */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">Quick Links</h3>
-                  <div className="space-y-2">
-                    <Link
-                      to="/new-arrivals"
-                      className="block p-3 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <p className="font-medium text-primary-700">New Arrivals</p>
-                      <p className="text-sm text-primary-600">Latest collections</p>
-                    </Link>
-                    <Link
-                      to="/sale"
-                      className="block p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <p className="font-medium text-red-700">Sale</p>
-                      <p className="text-sm text-red-600">Up to 40% off</p>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Account Section */}
-                <div className="border-t border-gray-200 pt-4">
-                  {isLoggedIn ? (
-                    <>
-                      <Link
-                        to="/account"
-                        className="flex items-center p-2 hover:bg-gray-100 rounded-lg"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <User className="w-5 h-5 mr-3 text-gray-600" />
-                        <span>My Account</span>
-                      </Link>
-                      <Link
-                        to="/orders"
-                        className="flex items-center p-2 hover:bg-gray-100 rounded-lg"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <Package className="w-5 h-5 mr-3 text-gray-600" />
-                        <span>My Orders</span>
-                      </Link>
-                      <Link
-                        to="/wishlist"
-                        className="flex items-center p-2 hover:bg-gray-100 rounded-lg"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <Heart className="w-5 h-5 mr-3 text-gray-600" />
-                        <span>Wishlist</span>
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        to="/login"
-                        className="block w-full text-center bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 mb-2"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        to="/register"
-                        className="block w-full text-center border border-primary-600 text-primary-600 px-4 py-2 rounded-lg font-medium hover:bg-primary-50"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Create Account
-                      </Link>
-                    </>
+                  {cartItemCount > 0 && (
+                    <span className="bg-red-600 text-white px-2 py-1 rounded-full text-xs font-bold">
+                      {cartItemCount} {cartItemCount === 1 ? 'item' : 'items'}
+                    </span>
                   )}
-                </div>
+                </Link>
               </div>
             </div>
           </div>
