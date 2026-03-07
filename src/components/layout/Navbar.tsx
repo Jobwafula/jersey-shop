@@ -139,8 +139,8 @@ const Navbar = () => {
                 <span className="text-white font-bold text-xl">JS</span>
               </div>
               <span className="text-2xl font-bold">
-                <span className="text-red-600">Jersey</span>
-                <span className="text-gray-900">Shop</span>
+                <span className="text-red-600">PediWaJersey</span>
+                {/* <span className="text-gray-900">Hub</span> */}
               </span>
             </Link>
 
