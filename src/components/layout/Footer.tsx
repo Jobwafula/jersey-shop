@@ -58,9 +58,9 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <Facebook className="w-5 h-5" />, href: 'https://facebook.com', label: 'Facebook' },
-    { icon: <Twitter className="w-5 h-5" />, href: 'https://twitter.com', label: 'Twitter' },
-    { icon: <Instagram className="w-5 h-5" />, href: 'https://instagram.com', label: 'Instagram' },
+    { icon: <Facebook className="w-5 h-5" />, href: 'https://www.facebook.com/palcherin.wekesa.9/', label: 'Facebook' },
+    { icon: <Twitter className="w-5 h-5" />, href: 'https://x.com/_wekesapaul', label: 'Twitter' },
+    { icon: <Instagram className="w-5 h-5" />, href: 'https://www.instagram.com/pediwajerseyke/', label: 'Instagram' },
     { icon: <Youtube className="w-5 h-5" />, href: 'https://youtube.com', label: 'YouTube' },
     { icon: <Github className="w-5 h-5" />, href: 'https://github.com', label: 'Github' },
     { icon: <Linkedin className="w-5 h-5" />, href: 'https://linkedin.com', label: 'LinkedIn' },
@@ -250,19 +250,19 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
                 <span className="text-sm text-gray-400">
-                  123 Football Street,<br />Sports City, SC 12345
+                  Magic Business Center,<br />Along Ronald Ngala Street Nairobi
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-yellow-500 flex-shrink-0" />
                 <a href="tel:+15551234567" className="text-sm text-gray-400 hover:text-yellow-500 transition-colors">
-                  +1 (555) 123-4567
+                  + (254) 743666719
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-yellow-500 flex-shrink-0" />
                 <a href="mailto:support@jerseyshop.com" className="text-sm text-gray-400 hover:text-yellow-500 transition-colors">
-                  support@jerseyshop.com
+                  pediwajersey@gmail.com
                 </a>
               </li>
             </ul>
@@ -273,7 +273,7 @@ const Footer = () => {
                 <Clock className="w-4 h-4 text-yellow-500" />
                 <span className="text-sm text-white font-semibold">Business Hours</span>
               </div>
-              <p className="text-xs text-gray-400">Mon - Fri: 9:00 AM - 8:00 PM</p>
+              <p className="text-xs text-gray-400">Mon - Fri: 9:00 AM - 7:00 PM</p>
               <p className="text-xs text-gray-400">Sat - Sun: 10:00 AM - 6:00 PM</p>
             </div>
           </div>
@@ -339,7 +339,7 @@ const Footer = () => {
 
       {/* WhatsApp Floating Button */}
       <a
-        href="https://wa.me/1234567890?text=Hi%20I%20have%20a%20question%20about%20your%20products"
+        href="https://wa.me/0743666719?text=Hi%20I%20have%20a%20question%20about%20your%20products"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-2xl hover:bg-green-700 transition-colors z-50 animate-bounce-slow group"
