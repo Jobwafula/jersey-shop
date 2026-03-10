@@ -127,7 +127,7 @@ const RetroKits = () => {
       });
 
   return (
-    <section className="py-24 bg-gradient-to-b from-amber-50 to-orange-50 relative overflow-hidden">
+    <section className="py-24 px-5 bg-gradient-to-b from-amber-50 to-orange-50 relative overflow-hidden">
       {/* Vintage Background Decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-amber-200/30 rounded-full blur-3xl"></div>

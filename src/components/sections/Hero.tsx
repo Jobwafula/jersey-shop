@@ -1,132 +1,143 @@
+// src/components/Hero.tsx
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle, Shield, Truck, Star } from 'lucide-react';
 import stadiumImage from '../../assets/tadium.webp';
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background Image with Overlay */}
+    <section className="relative py-3 min-h-screen flex items-center justify-center overflow-hidden bg-black pt-16 md:pt-20">
+      {/* Background Image + Overlay */}
       <div className="absolute inset-0">
         <img
           src={stadiumImage}
-          alt="Stadium background"
-          className="w-full h-full object-cover"
+          alt="Vibrant packed football stadium with passionate fans and dramatic lighting"
+          className="h-full w-full object-cover brightness-[0.42] contrast-[1.12] saturate-[1.08]"
+          loading="eager"
+          fetchpriority="high"
         />
-        {/* Fixed gradient overlay - using proper Tailwind colors */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/70"></div>
+        {/* Stronger, more balanced overlay for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
       </div>
 
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
+      {/* Subtle animated background glows */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -left-40 -top-40 w-[500px] h-[500px] bg-red-600/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute -right-40 -bottom-40 w-[500px] h-[500px] bg-red-500/10 rounded-full blur-3xl animate-pulse-slow delay-1500" />
       </div>
 
-      {/* Floating Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+      {/* Floating particles – reduced for performance, only on md+ */}
+      <div className="absolute inset-0 pointer-events-none hidden md:block">
+        {Array.from({ length: 12 }).map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 bg-white rounded-full opacity-20 animate-float"
+            className="absolute w-1 h-1 bg-white/25 rounded-full animate-float"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 10}s`
+              animationDelay: `${Math.random() * 10}s`,
+              animationDuration: `${10 + Math.random() * 15}s`,
             }}
           />
         ))}
       </div>
 
-      {/* Main Content - Centered */}
-      <div className="relative container-custom text-white z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8 animate-fadeIn border border-white/30">
-            <Star className="w-4 h-4 text-yellow-400 mr-2" />
-            <span className="text-sm font-medium text-white">Official Football Merchandise Store</span>
-          </div>
+      {/* Hero Content */}
+      <div className="relative z-10 container mx-auto px-5 sm:px-6 lg:px-8 text-center text-white">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2.5 px-5 py-2.5 mb-8 md:mb-10 rounded-full bg-white/10 backdrop-blur-lg border border-white/15 shadow-sm animate-fade-in">
+          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+          <span className="text-sm font-semibold tracking-wide">Official Football Merchandise Store</span>
+        </div>
 
-          {/* Main Heading - Centered */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 animate-fadeIn">
-            <span className="text-white drop-shadow-lg">Wear Your Passion</span>
-            <br />
-            <span className="text-red-400 relative inline-block mt-2 drop-shadow-lg">
-              Play Like a Legend
-              <span className="absolute -bottom-2 left-0 w-full h-1 bg-red-400 rounded-full shadow-lg"></span>
-            </span>
-          </h1>
+        {/* Headline */}
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight mb-6 md:mb-8 animate-fade-in-up">
+          <span className="block">Wear Your Passion</span>
+          <span className="block mt-1.5 md:mt-3 text-red-500 drop-shadow-[0_4px_16px_rgba(239,68,68,0.7)]">
+            Play Like a Legend
+          </span>
+        </h1>
 
-          {/* Description - Centered */}
-          <p className="text-xl text-white/95 max-w-2xl mx-auto mb-10 animate-fadeIn drop-shadow-md" style={{ animationDelay: '0.2s' }}>
-            Premium football jerseys, retro classics, and latest kits from around the world. 
-            Authentic quality, fast delivery.
-          </p>
+        {/* Subtitle */}
+        <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-10 md:mb-14 leading-relaxed animate-fade-in-up delay-100">
+          Authentic jerseys, retro classics & latest match kits from top clubs worldwide.<br className="hidden sm:inline" />
+          Fast countrywide delivery • 100% genuine products
+        </p>
 
-          {/* Buttons - Centered */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-fadeIn" style={{ animationDelay: '0.3s' }}>
-            <Link to="/products" className="w-full sm:w-auto">
-              <button className="group bg-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center shadow-xl hover:shadow-2xl w-full sm:w-48 border-2 border-red-400/20">
-                Shop Now
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </Link>
-            
-            <a
-              href="https://wa.me/1234567890?text=Hi%20I'm%20interested%20in%20your%20jerseys"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto"
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 mb-12 md:mb-16 animate-fade-in-up delay-200">
+          <Link
+            to="/products"
+            className="group inline-flex items-center justify-center gap-3 px-9 py-4.5 md:px-10 md:py-5 bg-red-600 hover:bg-red-700 text-white font-bold text-base md:text-lg rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-red-500/50 min-w-[180px]"
+          >
+            Shop Now
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+          </Link>
+
+          <a
+            href="https://wa.me/0743666719?text=Hi%20I'm%20interested%20in%20your%20football%20jerseys!"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center justify-center gap-3 px-9 py-4.5 md:px-10 md:py-5 bg-green-600 hover:bg-green-700 text-white font-bold text-base md:text-lg rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-green-500/50 min-w-[180px]"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Chat on WhatsApp
+          </a>
+        </div>
+
+        {/* Trust Badges */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8 max-w-4xl mx-auto animate-fade-in-up delay-300">
+          {[
+            {
+              icon: Truck,
+              title: 'Countrywide Delivery',
+              desc: 'Free on orders over KES 10,000',
+              color: 'red',
+            },
+            {
+              icon: Shield,
+              title: '100% Authentic',
+              desc: 'Official licensed products',
+              color: 'red',
+            },
+            {
+              icon: Star,
+              title: '4.9 / 5 Rating',
+              desc: '10,000+ happy customers',
+              color: 'yellow',
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="flex flex-col items-center gap-3 p-5 md:p-6 bg-black/35 backdrop-blur-md rounded-2xl border border-white/10 hover:border-white/25 transition-all duration-300"
             >
-              <button className="group bg-green-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center shadow-xl hover:shadow-2xl w-full sm:w-48 border-2 border-green-400/20">
-                <MessageCircle className="mr-2 w-5 h-5" />
-                WhatsApp
-              </button>
-            </a>
-          </div>
-
-          {/* Trust Badges - Centered */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto animate-fadeIn" style={{ animationDelay: '0.4s' }}>
-            <div className="text-center bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-              <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-red-400/30">
-                <Truck className="w-6 h-6 text-red-400" />
+              <div
+                className={`w-12 h-12 md:w-14 md:h-14 rounded-full bg-${item.color}-600/20 flex items-center justify-center border border-${item.color}-500/30`}
+              >
+                <item.icon className={`w-6 h-6 md:w-7 md:h-7 text-${item.color}-400`} />
               </div>
-              <p className="text-sm font-medium text-white">Free Shipping</p>
-              <p className="text-xs text-white/80">On orders over $100</p>
+              <p className="font-semibold text-white text-base">{item.title}</p>
+              <p className="text-xs md:text-sm text-white/75">{item.desc}</p>
             </div>
-            <div className="text-center bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-              <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-red-400/30">
-                <Shield className="w-6 h-6 text-red-400" />
-              </div>
-              <p className="text-sm font-medium text-white">Authentic</p>
-              <p className="text-xs text-white/80">100% genuine</p>
-            </div>
-            <div className="text-center bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-              <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-red-400/30">
-                <Star className="w-6 h-6 text-red-400" />
-              </div>
-              <p className="text-sm font-medium text-white">10k+ Reviews</p>
-              <p className="text-xs text-white/80">4.8/5 rating</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Scroll Indicator - Centered */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
-        <div className="w-6 h-10 border-2 border-white/80 rounded-full flex justify-center backdrop-blur-sm bg-black/10">
-          <div className="w-1 h-3 bg-white/80 rounded-full mt-2 animate-pulse"></div>
+      {/* Scroll Indicator */}
+      <div className="hidden sm:block absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 animate-bounce-slow">
+        <div className="w-7 h-11 md:w-8 md:h-12 border-2 border-white/35 rounded-full flex justify-center pt-2 backdrop-blur-sm">
+          <div className="w-1.5 h-3 bg-white/75 rounded-full animate-pulse" />
         </div>
       </div>
 
-      {/* WhatsApp Floating Button (for mobile) */}
+      {/* Floating WhatsApp Button – mobile only */}
       <a
-        href="https://wa.me/123567890?text=Hi%20I'm%20interested%20in%20your%20jerseys"
+        href="https://wa.me/0743666719?text=Hi%20I'm%20interested%20in%20your%20football%20jerseys!"
         target="_blank"
         rel="noopener noreferrer"
-        className="lg:hidden fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-2xl hover:bg-green-700 transition-colors z-50 animate-bounce-slow border-2 border-green-400/30"
+        className="lg:hidden fixed bottom-6 right-6 z-50 bg-green-600 text-white p-4.5 rounded-full shadow-2xl hover:bg-green-700 transition-all hover:scale-110 focus:outline-none focus:ring-4 focus:ring-green-500/50"
+        aria-label="Contact us on WhatsApp for enquiries"
       >
-        <MessageCircle className="w-6 h-6" />
+        <MessageCircle className="w-7 h-7" />
       </a>
     </section>
   );
