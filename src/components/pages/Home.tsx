@@ -1,4 +1,5 @@
 
+import CollectionsSection from '../sections/CollectionsSection'
 import FootballBoots from '../sections/Footballboots'
 import Hero from '../sections/Hero'
 import KidsKits from '../sections/KidsKits'
@@ -12,13 +13,14 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <NewArrivals />
+      <CollectionsSection />
+      {/* <NewArrivals />
       <RetroKits />
       <NewSeasonKits />
       <SpecialKits />
       <FootballBoots />
       <KidsKits />
-      <Others />
+      <Others /> */}
     </div>
   )
 }
